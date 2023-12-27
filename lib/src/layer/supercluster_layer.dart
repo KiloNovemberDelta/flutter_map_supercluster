@@ -82,6 +82,9 @@ class SuperclusterLayer extends StatelessWidget {
   /// Function to call when a Marker is tapped
   final void Function(Marker)? onMarkerTap;
 
+  /// Function to call when a Cluster is tapped
+  final void Function(List<LayerPoint<Marker>>)? onClusterTap;
+
   /// A builder used to override the override which is displayed whilst the
   /// supercluster index is being built.
   final WidgetBuilder? loadingOverlayBuilder;
@@ -116,6 +119,7 @@ class SuperclusterLayer extends StatelessWidget {
     this.initialMarkers = const [],
     this.moveMap,
     this.onMarkerTap,
+    this.onClusterTap,
     this.maxClusterZoom,
     this.minimumClusterSize,
     this.maxClusterRadius = 80,
@@ -141,6 +145,7 @@ class SuperclusterLayer extends StatelessWidget {
     this.initialMarkers = const [],
     this.moveMap,
     this.onMarkerTap,
+    this.onClusterTap,
     this.maxClusterZoom,
     this.minimumClusterSize,
     this.maxClusterRadius = 80,
@@ -171,6 +176,7 @@ class SuperclusterLayer extends StatelessWidget {
           initialMarkers: initialMarkers,
           moveMap: moveMap,
           onMarkerTap: onMarkerTap,
+          onClusterTap: onClusterTap,
           maxClusterZoom: maxClusterZoom,
           minimumClusterSize: minimumClusterSize,
           maxClusterRadius: maxClusterRadius,
