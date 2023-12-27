@@ -37,6 +37,7 @@ class SuperclusterLayerImpl extends StatefulWidget {
   final int? minimumClusterSize;
   final int maxClusterRadius;
   final ClusterDataBase Function(Marker marker)? clusterDataExtractor;
+  final void Function(List<LayerPoint<Marker>>)? onClusterTap;
   final MoveMapCallback? moveMap;
   final void Function(Marker)? onMarkerTap;
   final WidgetBuilder? loadingOverlayBuilder;
@@ -57,6 +58,7 @@ class SuperclusterLayerImpl extends StatefulWidget {
     required this.initialMarkers,
     required this.moveMap,
     required this.onMarkerTap,
+    required this.onClusterTap,
     required this.maxClusterZoom,
     required this.minimumClusterSize,
     required this.maxClusterRadius,
@@ -389,6 +391,9 @@ class _SuperclusterLayerImplState extends State<SuperclusterLayerImpl>
     Supercluster<Marker> supercluster,
     LayerCluster<Marker> layerCluster,
   ) async {
+    final layerMarkers =
+        supercluster.childrenOf(layerCluster).cast<LayerPoint<Marker>>();
+    widget.onClusterTap?.call(layerMarkers);
     if (layerCluster.highestZoom >= _superclusterConfig.maxZoom) {
       await _moveMapIfNotAt(
         layerCluster.latLng,
@@ -400,8 +405,7 @@ class _SuperclusterLayerImplState extends State<SuperclusterLayerImpl>
         () => ExpandedCluster(
           vsync: this,
           mapCamera: widget.mapCamera,
-          layerPoints:
-              supercluster.childrenOf(layerCluster).cast<LayerPoint<Marker>>(),
+          layerPoints: layerMarkers,
           layerCluster: layerCluster,
           clusterSplayDelegate: widget.clusterSplayDelegate,
         ),
