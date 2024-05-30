@@ -106,11 +106,6 @@ class SuperclusterLayer extends StatelessWidget {
   /// with the updated value.
   final bool calculateAggregatedClusterData;
 
-  /// Splaying occurs when it is not possible to open a cluster because its
-  /// points are visible at a zoom higher than the max zoom. This delegate
-  /// controls the animation and style of the cluster splaying.
-  final ClusterSplayDelegate clusterSplayDelegate;
-
   const SuperclusterLayer.immutable({
     super.key,
     SuperclusterImmutableController? this.controller,
@@ -129,10 +124,6 @@ class SuperclusterLayer extends StatelessWidget {
     this.loadingOverlayBuilder,
     PopupOptions? popupOptions,
     this.clusterAlignment = Alignment.center,
-    this.clusterSplayDelegate = const SpreadClusterSplayDelegate(
-      duration: Duration(milliseconds: 300),
-      splayLineOptions: SplayLineOptions(),
-    ),
   })  : isMutableSupercluster = false,
         popupOptions =
             popupOptions == null ? null : popupOptions as PopupOptionsImpl;
@@ -155,9 +146,6 @@ class SuperclusterLayer extends StatelessWidget {
     this.loadingOverlayBuilder,
     PopupOptions? popupOptions,
     this.clusterAlignment = Alignment.center,
-    this.clusterSplayDelegate = const SpreadClusterSplayDelegate(
-      duration: Duration(milliseconds: 400),
-    ),
   })  : isMutableSupercluster = true,
         popupOptions =
             popupOptions == null ? null : popupOptions as PopupOptionsImpl;
@@ -186,7 +174,7 @@ class SuperclusterLayer extends StatelessWidget {
           loadingOverlayBuilder: loadingOverlayBuilder,
           popupOptions: popupOptions,
           clusterAlignment: clusterAlignment,
-          clusterSplayDelegate: clusterSplayDelegate,
+          //clusterSplayDelegate: clusterSplayDelegate,
         ),
       );
 }

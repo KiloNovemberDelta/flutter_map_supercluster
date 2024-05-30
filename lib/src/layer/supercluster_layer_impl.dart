@@ -45,7 +45,7 @@ class SuperclusterLayerImpl extends StatefulWidget {
   final Size clusterWidgetSize;
   final Alignment clusterAlignment;
   final bool calculateAggregatedClusterData;
-  final ClusterSplayDelegate clusterSplayDelegate;
+  //final ClusterSplayDelegate clusterSplayDelegate;
 
   const SuperclusterLayerImpl({
     super.key,
@@ -68,7 +68,7 @@ class SuperclusterLayerImpl extends StatefulWidget {
     required this.loadingOverlayBuilder,
     required this.popupOptions,
     required this.clusterAlignment,
-    required this.clusterSplayDelegate,
+    //required this.clusterSplayDelegate,
   });
 
   @override
@@ -399,18 +399,6 @@ class _SuperclusterLayerImplState extends State<SuperclusterLayerImpl>
         layerCluster.latLng,
         layerCluster.highestZoom.toDouble(),
       );
-
-      final splayAnimation = _expandedClusterManager.putIfAbsent(
-        layerCluster,
-        () => ExpandedCluster(
-          vsync: this,
-          mapCamera: widget.mapCamera,
-          layerPoints: layerMarkers,
-          layerCluster: layerCluster,
-          clusterSplayDelegate: widget.clusterSplayDelegate,
-        ),
-      );
-      if (splayAnimation != null) setState(() {});
     } else {
       await _moveMapIfNotAt(
         layerCluster.latLng,
@@ -533,22 +521,13 @@ class _SuperclusterLayerImplState extends State<SuperclusterLayerImpl>
     // Find the parent.
     final layerCluster = supercluster.parentOf(layerPoint)!;
 
-    // Shorthand for creating an ExpandedCluster.
-    createExpandedCluster() => ExpandedCluster(
-          vsync: this,
-          mapCamera: widget.mapCamera,
-          layerPoints:
-              supercluster.childrenOf(layerCluster).cast<LayerPoint<Marker>>(),
-          layerCluster: layerCluster,
-          clusterSplayDelegate: widget.clusterSplayDelegate,
-        );
 
     // Find or create the marker's ExpandedCluster and use it to find the
     // DisplacedMarker.
     final expandedClusterBeforeMovement =
         _expandedClusterManager.forLayerCluster(layerCluster);
     final createdExpandedCluster =
-        expandedClusterBeforeMovement != null ? null : createExpandedCluster();
+        expandedClusterBeforeMovement != null ? null : null;
     final displacedMarker =
         (expandedClusterBeforeMovement ?? createdExpandedCluster)!
             .markersToDisplacedMarkers[layerPoint.originalPoint]!;
@@ -564,15 +543,7 @@ class _SuperclusterLayerImplState extends State<SuperclusterLayerImpl>
     //      because there was none before movement.
     //   2. Movement may have caused the ExpandedCluster to be removed in which
     //      case we create a new one.
-    final splayAnimation = _expandedClusterManager.putIfAbsent(
-      layerCluster,
-      () => createdExpandedCluster ?? createExpandedCluster(),
-    );
-    if (splayAnimation != null) {
-      if (!mounted) return;
-      setState(() {});
-      await splayAnimation;
-    }
+
 
     if (showPopup) {
       final popupSpec = PopupSpecBuilder.forDisplacedMarker(
